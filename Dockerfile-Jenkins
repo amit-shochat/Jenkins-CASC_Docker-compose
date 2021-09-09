@@ -1,0 +1,29 @@
+FROM jenkinsci/blueocean
+
+LABEL maintainer="support@support.com"
+
+USER root
+
+# Install the required docker package
+RUN apk add --update docker docker-compose
+
+# disable the setup wizard as we will set up jenkins as code
+ENV JAVA_OPTS -Djenkins.install.runSetupWizard=false
+
+# Configure - Jenkins Configuration as Code
+ENV CASC_JENKINS_CONFIG /usr/local/jenkins-casc.yaml
+
+# Copy the list of plugins
+COPY plugins.txt /plugins.txt
+
+# install all plugins
+RUN /usr/local/bin/install-plugins.sh < /plugins.txt
+
+# copy the config-as-code yaml file into the image
+COPY jenkins-casc.yaml /usr/local/jenkins-casc.yaml
+
+# run ALL commands without a password for the jenkins user
+RUN echo "jenkins ALL=NOPASSWD: ALL" >> /etc/sudoers
+
+# Switch To The Jenkins user
+USER jenkins

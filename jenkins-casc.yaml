@@ -1,0 +1,45 @@
+jenkins:
+  systemMessage: "Jenkins CASC"
+  securityRealm:
+    local:
+      allowsSignup: false
+      users:
+        # create a user called admin
+        - id: "admin"
+          password: "admin"
+        - id: "amit"
+          password: "amit"
+  authorizationStrategy:
+    globalMatrix:
+      permissions:
+        #Admin
+        - "Overall/Administer:admin"
+
+        #Amit-example user
+        - "Overall/Read:amit"
+        - "Job/Build:amit"
+        - "Job/Cancel:amit"
+        - "Job/Configure:amit"
+        - "Job/Create:amit"
+        - "Job/Delete:amit"
+        - "Job/Discover:amit"
+        - "Job/Move:amit"
+        - "Job/Read:amit"
+        - "Job/Workspace:amit"
+        - "Run/Delete:amit"
+        - "Run/Replay:amit"
+        - "Run/Update:amit"
+
+tool:
+  git:
+    installations:
+      - name: "Default"
+        home: "git"
+  dockerTool:
+    installations:
+    - name: "Docker"
+      properties:
+      - installSource:
+          installers:
+          - fromDocker:
+              version: "latest"
